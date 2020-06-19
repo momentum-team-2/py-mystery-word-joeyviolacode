@@ -5,8 +5,10 @@ file_name = "words.txt"
 words_file = open(file_name)
 complete_words_list = words_file.readlines()
 MASTER_WORD_LIST = [word.replace("\n", "").upper() for word in complete_words_list]
+TRIES_ALLOWED = 10
 words_file.close()
 guessed_letters = []
+wrong_tries = 3
 
 def start_game():
     print()
@@ -16,16 +18,36 @@ def start_game():
     length = 10
     word_list = get_words_of_length(length)
     if difficulty == "E":
-        run_game_e(word_list)
+        run_game_e(get_word(word_list))
     else:
         run_game_s(word_list)
 
-def run_game_e(word_list):
-    pass
+def run_game_e(word):
+    print(get_display_str("PASTE"))
+    print("Easy is running.")
 
 def run_game_s(word_list):
-    pass
+    print(get_display_str(word_list))
+    print("Sinister is running.")
 
+
+def get_guess(word):
+    """This function takes in a word (or list of words in Sinister), displays the information known so far about the guesses that have
+        been made and then prompts the user for a letter.  I makes sure that it receives a letter, and if so, returns a capitalized
+        version of that letter to the caller"""
+    print()
+    print(f"You're allowed only {TRIES_ALLOWED - wrong_tries} more wrong guesses.  Be very careful.")
+    print("Here's what you know so far about the word you're trying to guess:\n")
+    print(get_display_str(word) + "\n\n")
+    guess = ""
+    if len(guessed_letters) == 0:
+        guess = input("Make your first guess.  In case it helps, this should be a letter, one of the ones in the alphabet: ")
+    else: 
+        guess = input("Time to make another guess: ")
+    while not ("A" <= guess <= "z"):
+        print("Um...I'm afraid that isn't a letter.  You'll find letters kind of in the big middle part of your keyboard.\n")
+        guess = input("Try again: ")
+    return guess.upper()
 
 
 def get_difficulty():
@@ -57,12 +79,16 @@ def get_words_of_length(length):
 def get_word(word_list):
     return word_list[random.randint(0, len(word_list) - 1)]
 
-def get_display_str_e():
+def get_display_str(word):
+    """Returns a string representation of guessed letters and blanks for unguessed letters to show the player for the chosen word"""
+    if isinstance(word, list):
+        word = word[0]
     str = ""
-    return str
-
-def get_display_str_s(word_list):
-    str = ""
+    for letter in word:
+        if letter in guessed_letters:
+            str += letter + " "
+        else:
+            str += "_ "
     return str
 
 
@@ -173,10 +199,31 @@ def print_words_of_length(words_list, length):
 
 ## Main function to start game logic
 if __name__ == "__main__":
-    start_game()
+    get_guess("PASTE")
+    #start_game()
     # test_words = ["teeth", "clear", "tooth", "beech", "beach", "teach", "peach", "place", "mango"]
     # print(test_words)
     # new_family = handle_family_selection(test_words, "a")
     # print(new_family)
     # newer_family = handle_family_selection(new_family, "p")
     # print(newer_family)
+
+
+
+
+
+
+
+
+
+### Obsolete function...added list-check to make a single function that performs this operation
+# def get_display_str_s(word_list):
+# """Returns a string representation of guessed letters and blanks for unguessed letters to show the player for the chosen word family"""
+# str = ""
+# word = word_list[0]
+# for letter in word:
+#     if letter in guessed_letters:
+#         str += letter + " "
+#     else:
+#         str += "_ "
+# return str
