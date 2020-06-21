@@ -1,4 +1,6 @@
 import random
+import os
+clear = lambda: os.system("clear")
 
 file_name = "words.txt"
 
@@ -6,12 +8,11 @@ words_file = open(file_name)
 complete_words_list = words_file.readlines()
 words_file.close()
 MASTER_WORD_LIST = [word.replace("\n", "").upper() for word in complete_words_list]
-TRIES_ALLOWED = 8
+TRIES_ALLOWED = 10
 
 
 def start_game():
-    print()
-    welcome()
+    clear()
     difficulty = get_difficulty()
     length = get_length()
     word_list = get_words_of_length(length)
@@ -23,30 +24,37 @@ def start_game():
 def run_game_e(word):
     guessed_letters = []
     wrong_tries = 0
+    confirm_string = ""
     while True:
+        clear()
+        print(confirm_string)
         display_word = get_display_str(word, guessed_letters)
         if no_blanks(display_word):
             print("You win!!!  I didn't think you could do it.  Surprises all around.  Your word was: " + word + "\n\n")
             play_again()
         guess = get_guess(display_word, wrong_tries, guessed_letters)
         guessed_letters.append(guess)
+        guessed_letters.sort()
         if guess in word:
-            print("\nGood guess!  That's in the word!")
+            confirm_string = "\nGood guess!  That's in the word!"
         else:
-            print("\nSorry.  That's not a letter in the word you're trying to guess.")
+            confirm_string = "\nSorry.  That's not a letter in the word you're trying to guess."
             wrong_tries += 1
         if wrong_tries == TRIES_ALLOWED:
-            print("You've taken too many guesses.  Unfortunately, you have not won the day.\n")
-            print("The word that you were trying to figure out was: " + word)
-            print("It's kind of obvious now that you see it, isn't it?")
+            clear()
+            game_over(word, guessed_letters)
             play_again()
 
 
 def run_game_s(word_list):
-    print("The word list currently contains " + str(len(word_list)) + " words.")
     guessed_letters = []
     wrong_tries = 0
+    confirm_string = ""
+    word_quantity_string = "The word list currently contains " + str(len(word_list)) + " words."
     while True:
+        clear()
+        print(confirm_string)
+        print(word_quantity_string)
         display_word = get_display_str(word_list, guessed_letters)
         if no_blanks(display_word):
             print("You win!!!  I didn't think you could do it.  Surprises all around.  Your word was: " 
@@ -54,30 +62,37 @@ def run_game_s(word_list):
             play_again()
         guess = get_guess(display_word, wrong_tries, guessed_letters)
         guessed_letters.append(guess)
+        guessed_letters.sort()
         word_list = handle_family_selection(word_list, guess)
-        print("The word list currently contains " + str(len(word_list)) + " words.")
+        word_quantity_string = "The word list currently contains " + str(len(word_list)) + " words."
         if guess in word_list[0]:
-            print("\nGood guess!  That's in the word!")
+            confirm_string = "\nGood guess!  That's in the word!"
         else:
-            print("\nSorry.  That's not a letter in the word you're trying to guess.")
+            confirm_string = "\nSorry.  That's not a letter in the word you're trying to guess."
             wrong_tries += 1
         if wrong_tries == TRIES_ALLOWED:
-            print("You've taken too many guesses.  Unfortunately, you have not won the day.\n")
-            print("The word that you were trying to figure out was: " + word_list[random.randint(0, len(word_list) - 1)])
-            print("It's kind of obvious now that you see it, isn't it?")
+            game_over(word_list[random.randint(0, len(word_list) - 1)], guessed_letters)
             play_again()
 
+
+def game_over(word, guessed_letters):
+    clear()
+    print("You've taken too many guesses.  Unfortunately, you have not won the day.\n")
+    print("The letters you used were: " + ", ".join(guessed_letters) + "\n")
+    print("The word that you were trying to figure out was: " + word + "\n")
+    print("It's kind of obvious now that you see it, isn't it?\n")
+    input("Press RETURN to continue.")
+    clear()
+
+
 def play_again():
-    print()
-    print("That was...exciting?  Please don't feel like you have to, but do you want to play again?")
-    print("Don't feel like you have to just to make me feel better.\nI'm completely happy to free up some memory and just catch some sleep.")
+    print("That was...exciting?  I'm not encouraging it, but do you want to play again?\n")
+    print("Don't feel like you have to just to make me feel better.\nI'm completely happy to free up some memory and just catch some sleep.\n")
     print("Anyway, let's make this easy on all of us.  Press Y for (Y)es if you want to play again.")
     again = input("If you don't want to play again, press anything at all other than Y.   ").upper()
     if again == "Y":
-        print("Starting")
         start_game()
     else:
-        print("exiting")
         exit()
 
 def no_blanks(display_word):
@@ -89,7 +104,7 @@ def get_guess(display_word, wrong_tries, guessed_letters):
         been made and then prompts the user for a letter.  I makes sure that it receives a letter, and if so, returns a capitalized
         version of that letter to the caller"""
     print()
-    print(f"You're allowed only {TRIES_ALLOWED - wrong_tries} more wrong guesses.  Be very careful.")
+    print(f"You have {TRIES_ALLOWED - wrong_tries} wrong guesses remaining.  Be very careful.")
     print("Here's what you know so far about the word you're trying to guess:\n")
     print(display_word + "\n\n")
     guess = ""
@@ -122,7 +137,7 @@ def get_difficulty():
     return difficulty.upper()
 
 def get_length():
-    length = (input("Please let me know what length of word you'd like to try to solve.\nThis number should be between 3 and 24, inclusive: "))
+    length = input("Please let me know what length of word you'd like to try to solve.\nThis number should be between 3 and 24, inclusive: ")
     while length < "0" or length > "9" or int(length) < 3 or int(length) > 24:
         print("\n**SIGH**   Are you the same person who was having trouble with letters a few minutes back?")
         print("No, no.  Don't answer.  I don't want to know.  Can you please just try again?")
@@ -264,6 +279,7 @@ def print_words_of_length(words_list, length):
 
 ## Main function to start game logic
 if __name__ == "__main__":
+    welcome()
     start_game()
     #run_game_s(["TEETH", "CLEAR", "TOOTH", "BEECH", "BEACH", "TEACH", "PEACH", "PLACE", "MANGO"])
     #get_guess(get_display_str("PASTE", ["P", "S"]), 3, ["P", "S"])
@@ -295,3 +311,32 @@ if __name__ == "__main__":
 #     else:
 #         str += "_ "
 # return str
+
+# Working function to combine both easy and sinister into one run_game function....it's possible, but 
+# at this point there would be too many if blocks as I have it set up now, as I'm giving extra info in Sinister
+# so that it's a little more transparent about how the word sifting is happening.
+def run_game_both(word_or_list):
+    if isinstance(word_or_list, list):
+        print("The word list currently contains " + str(len(word_or_list)) + " words.")
+    guessed_letters = []
+    wrong_tries = 0
+    while True:
+        display_word = get_display_str(word_or_list, guessed_letters)
+        if no_blanks(display_word):
+            print("You win!!!  I didn't think you could do it.  Surprises all around.  Your word was: " 
+                    + word_or_list[random.randint(0, len(word_or_list) - 1)] + "\n\n")
+            play_again()
+        guess = get_guess(display_word, wrong_tries, guessed_letters)
+        guessed_letters.append(guess)
+        word_list = handle_family_selection(word_or_list, guess)
+        print("The word list currently contains " + str(len(word_list)) + " words.")
+        if guess in word_or_list[0]:
+            print("\nGood guess!  That's in the word!")
+        else:
+            print("\nSorry.  That's not a letter in the word you're trying to guess.")
+            wrong_tries += 1
+        if wrong_tries == TRIES_ALLOWED:
+            print("You've taken too many guesses.  Unfortunately, you have not won the day.\n")
+            print("The word that you were trying to figure out was: " + word_or_list[random.randint(0, len(word_or_list) - 1)])
+            print("It's kind of obvious now that you see it, isn't it?")
+            play_again()
