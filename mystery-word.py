@@ -98,7 +98,7 @@ def get_guess(display_word, wrong_tries, guessed_letters):
     else: 
         print("You have already used: " + ", ".join(guessed_letters))
         guess = input("Time to make another guess: ")
-    while not ("A" <= guess <= "z") or guess.upper() in guessed_letters:
+    while not ("A" <= guess <= "z") or guess.upper() in guessed_letters or len(guess) != 1:
         print("\nUm...I'm afraid that isn't a letter.  Or you've already picked that one.  I don't know.")
         print("You'll find letters kind of in the big middle part of your keyboard.\n")
         guess = input("Try again: ")
@@ -108,11 +108,10 @@ def get_guess(display_word, wrong_tries, guessed_letters):
 def get_difficulty():
     difficulty = input("Welcome to Mystery Word!  Would you like to play the (E)asy or (S)inister version?\nOr would you just like to (Q)uit while you're ahead? ")
     difficulty = difficulty.upper()
-    print("You have typed: " + difficulty)
     while difficulty != "E" and difficulty != "S" and difficulty != "Q":
         print("\nWell, that isn't an E or an S.  You know that this IS a spelling game, right?  Do you know your lettters?\nWait!  Do you know what letters ARE?")
         print("Please try again, but just...be better this time.")
-        difficulty = input("\nWould you like to play the (E)asy or (S)inister version?  Or, you know, you can just give me a 'Q'.\nWhich is it? ")
+        difficulty = input("\nWould you like to play the (E)asy or (S)inister version?  Or, you know, you can just give me a 'Q'.\nWhich is it? ").upper()
     if difficulty == "E":
         print("\nOkay, but that seems a bit tame.\n")
     elif difficulty == "S":
@@ -123,12 +122,12 @@ def get_difficulty():
     return difficulty.upper()
 
 def get_length():
-    length = int(input("Please let me know what length of word you'd like to try to solve.\nThis number should be between 3 and 24, inclusive: "))
-    while length < 3 or length > 24:
+    length = (input("Please let me know what length of word you'd like to try to solve.\nThis number should be between 3 and 24, inclusive: "))
+    while length < "0" or length > "9" or int(length) < 3 or int(length) > 24:
         print("\n**SIGH**   Are you the same person who was having trouble with letters a few minutes back?")
         print("No, no.  Don't answer.  I don't want to know.  Can you please just try again?")
         length = input("But please do really, really try to give me a number between 3 and 24: ")
-    return length
+    return int(length)
 
 def get_words_of_length(length):
     """Returns a list of words of a given length.  This will be the starting master family for Sinister and the pool from which 
