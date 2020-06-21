@@ -11,6 +11,7 @@ TRIES_ALLOWED = 8
 
 def start_game():
     print()
+    welcome()
     difficulty = get_difficulty()
     length = get_length()
     word_list = get_words_of_length(length)
@@ -106,18 +107,20 @@ def get_guess(display_word, wrong_tries, guessed_letters):
 
 def get_difficulty():
     difficulty = input("Welcome to Mystery Word!  Would you like to play the (E)asy or (S)inister version?\nOr would you just like to (Q)uit while you're ahead? ")
-    while difficulty is not "E" and difficulty is not "S" and difficulty is not "Q":
+    difficulty = difficulty.upper()
+    print("You have typed: " + difficulty)
+    while difficulty != "E" and difficulty != "S" and difficulty != "Q":
         print("\nWell, that isn't an E or an S.  You know that this IS a spelling game, right?  Do you know your lettters?\nWait!  Do you know what letters ARE?")
         print("Please try again, but just...be better this time.")
         difficulty = input("\nWould you like to play the (E)asy or (S)inister version?  Or, you know, you can just give me a 'Q'.\nWhich is it? ")
-    if difficulty is "E":
+    if difficulty == "E":
         print("\nOkay, but that seems a bit tame.\n")
-    elif difficulty is "S":
+    elif difficulty == "S":
         print("\nIt's your funeral.\n")
     else:
         print("\nThat's probably for the best, isn't it?\nIt'll certainly save us all a lot of trouble.\nStudy up and come back later.\nOr don't.  I don't really care.")
         exit(1)
-    return difficulty
+    return difficulty.upper()
 
 def get_length():
     length = int(input("Please let me know what length of word you'd like to try to solve.\nThis number should be between 3 and 24, inclusive: "))
@@ -230,6 +233,12 @@ def select_family(list_of_families):
 # selected_family = select_family(word_families)
 # print(selected_family)
 
+def welcome():
+    print("West of House")
+    print("You are standing in an open field west of a white house, with a boarded front door.")
+    input("There is a small mailbox here.")
+    input("\n\nJust kidding.\nAlthough it may be better if you just go play Zork instead.")
+    print("\n")
 
 
 #PRELIMINARY DICTIONARY EXPLORATION FUNCTIONS
