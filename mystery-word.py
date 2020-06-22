@@ -105,7 +105,7 @@ def get_guess(display_word, wrong_tries, guessed_letters):
         version of that letter to the caller"""
     print()
     print(f"You have {TRIES_ALLOWED - wrong_tries} wrong guesses remaining.  Be very careful.")
-    print("Here's what you know so far about the word you're trying to guess:\n")
+    print("Here's what you know so far about the word you're trying to guess:\n\n")
     print(display_word + "\n\n")
     guess = ""
     if len(guessed_letters) == 0:

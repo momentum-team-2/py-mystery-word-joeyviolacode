@@ -1,7 +1,7 @@
 
 
 
-
+test_words = ["TEETH", "TOOTH", "BOOKS", "BOOTH", "MANGO", "PEACH", "BEACH", "TENTH", "PLACE", "CLEAR", "BONGO", "TOMES", "OTHER"]
 
 def handle_family_selection(list_of_words, letter_to_check):
     """Uses a collection of functions(below) to take in the current list of words and select a subset of that list based on
@@ -96,4 +96,8 @@ def select_family(list_of_families):
 # selected_family = select_family(word_families)
 # print(selected_family)
 
-test_words = ["TEETH", "TOOTH", "BOOKS", "BOOTH", "MANGO", "PEACH", "BEACH", "TENTH", "PLACE", "CLEAR", "BONGO", "TOMES", "OTHER"]
+while True:
+    print("************************************************************************************")
+    print("The current list of words is: " + ", ".join(test_words))
+    letter = input("Enter a letter to use for sifting: ")
+    test_words = handle_family_selection(test_words, letter)
