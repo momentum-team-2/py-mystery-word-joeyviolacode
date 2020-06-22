@@ -270,6 +270,7 @@ def print_words_of_length(words_list, length):
 
 ## Main function to start game logic
 if __name__ == "__main__":
+    clear()
     welcome()
     start_game()
 
