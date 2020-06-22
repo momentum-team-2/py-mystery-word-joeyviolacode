@@ -1,9 +1,8 @@
 import random
 import os
+
 clear = lambda: os.system("clear")
-
 file_name = "words.txt"
-
 words_file = open(file_name)
 complete_words_list = words_file.readlines()
 words_file.close()
@@ -12,6 +11,7 @@ TRIES_ALLOWED = 10
 
 
 def start_game():
+    """Called by the main in order to initialize user options for the game and call the appropriate mode"""
     clear()
     difficulty = get_difficulty()
     length = get_length()
@@ -22,6 +22,7 @@ def start_game():
         run_game_s(word_list)
 
 def run_game_e(word):
+    """Runs the easy version of the game logic"""
     guessed_letters = []
     wrong_tries = 0
     confirm_string = ""
@@ -45,8 +46,8 @@ def run_game_e(word):
             game_over(word, guessed_letters)
             play_again()
 
-
 def run_game_s(word_list):
+    """Runs the hard version of the game logic"""
     guessed_letters = []
     wrong_tries = 0
     confirm_string = ""
@@ -75,30 +76,6 @@ def run_game_s(word_list):
             play_again()
 
 
-def game_over(word, guessed_letters):
-    clear()
-    print("You've taken too many guesses.  Unfortunately, you have not won the day.\n")
-    print("The letters you used were: " + ", ".join(guessed_letters) + "\n")
-    print("The word that you were trying to figure out was: " + word + "\n")
-    print("It's kind of obvious now that you see it, isn't it?\n")
-    input("Press RETURN to continue.")
-    clear()
-
-
-def play_again():
-    print("That was...exciting?  I'm not encouraging it, but do you want to play again?\n")
-    print("Don't feel like you have to just to make me feel better.\nI'm completely happy to free up some memory and just catch some sleep.\n")
-    print("Anyway, let's make this easy on all of us.  Press Y for (Y)es if you want to play again.")
-    again = input("If you don't want to play again, press anything at all other than Y.   ").upper()
-    if again == "Y":
-        start_game()
-    else:
-        exit()
-
-def no_blanks(display_word):
-    return "_" not in display_word
-
-
 def get_guess(display_word, wrong_tries, guessed_letters):
     """This function takes in a word (or list of words in Sinister), displays the information known so far about the guesses that have
         been made and then prompts the user for a letter.  I makes sure that it receives a letter, and if so, returns a capitalized
@@ -119,8 +96,9 @@ def get_guess(display_word, wrong_tries, guessed_letters):
         guess = input("Try again: ")
     return guess.upper()
 
-
 def get_difficulty():
+    """Prompts the user for a difficulty setting, checking for errors and reprompting (and mocking) if necessary before returning
+        the selected difficulty"""
     difficulty = input("Welcome to Mystery Word!  Would you like to play the (E)asy or (S)inister version?\nOr would you just like to (Q)uit while you're ahead? ")
     difficulty = difficulty.upper()
     while difficulty != "E" and difficulty != "S" and difficulty != "Q":
@@ -137,6 +115,8 @@ def get_difficulty():
     return difficulty.upper()
 
 def get_length():
+    """Prompts the user for a length to their word, checking for errors and reprompting (and mocking) if necessary before returning
+        the selected length"""
     length = input("Please let me know what length of word you'd like to try to solve.\nThis number should be between 3 and 24, inclusive: ")
     while length < "0" or length > "9" or int(length) < 3 or int(length) > 24:
         print("\n**SIGH**   Are you the same person who was having trouble with letters a few minutes back?")
@@ -167,6 +147,32 @@ def get_display_str(word_or_list, guessed_letters):
             str += "_ "
     return str
 
+def game_over(word, guessed_letters):
+    """Prints an end of game message to the user"""
+    clear()
+    print("You've taken too many guesses.  Unfortunately, you have not won the day.\n")
+    print("The letters you used were: " + ", ".join(guessed_letters) + "\n")
+    print("The word that you were trying to figure out was: " + word + "\n")
+    print("It's kind of obvious now that you see it, isn't it?\n")
+    input("Press RETURN to continue.")
+    clear()
+
+
+def play_again():
+    """Prints a dialogue to the user asking if they would like to play again."""
+    print("That was...exciting?  I'm not encouraging it, but do you want to play again?\n")
+    print("Don't feel like you have to just to make me feel better.\nI'm completely happy to free up some memory and just catch some sleep.\n")
+    print("Anyway, let's make this easy on all of us.  Press Y for (Y)es if you want to play again.")
+    again = input("If you don't want to play again, press anything at all other than Y.   ").upper()
+    if again == "Y":
+        start_game()
+    else:
+        exit()
+
+def no_blanks(display_word):
+    """Helper function used to check if a word no longer has blanks in it and is therefore finished."""
+    return "_" not in display_word
+
 
 def handle_family_selection(list_of_words, letter_to_check):
     """Uses a collection of functions(below) to take in the current list of words and select a subset of that list based on
@@ -179,11 +185,7 @@ def handle_family_selection(list_of_words, letter_to_check):
     return family
 
 #The following are a set of functions called by handle_family_selection in order to select the next family of words to be used
-#by the game.....the commented pairs of variables and print provide testing options for seeing what happens at each stage 
-# of the process.
-
-# test_words = ["teeth", "clear", "tooth", "beech", "beach", "teach", "peach", "place", "mango"]
-# print(test_words)
+#by the game.....
 
 def map_key_to_word(list_of_words, letter_to_check):
     """This requires a list of candidate words and a letter to map onto keys and
@@ -199,20 +201,14 @@ def map_key_to_word(list_of_words, letter_to_check):
         word_key_pairs.append((word, key))
     return word_key_pairs
 
-# test_words_keyed = map_key_to_word(test_words, "a")
-# print(test_words_keyed)
-
 def collect_keys(words_key):
     """This function sifts the given list of tuples for all the unique keys, passing them all
-        back in a list to be used for sorting"""
+        back in a list to be used for sorting."""
     list_of_keys = []
     for item in words_key:
         if item[1] not in list_of_keys:
             list_of_keys.append(item[1])
     return list_of_keys
-
-# list_of_keys = collect_keys(test_words_keyed)
-# print(list_of_keys)
 
 def sort_by_key(words_with_keys, key_list):
     """This function requires a list of of tuples containing words and their keys and a list of keys.
@@ -225,9 +221,6 @@ def sort_by_key(words_with_keys, key_list):
                 word_list.append(word[0])
         word_list_sorted.append(word_list)
     return word_list_sorted
-
-# word_families = sort_by_key(test_words_keyed, list_of_keys)
-# print(word_families)
 
 def select_family(list_of_families):
     """This function takes in a list of word families and selects the one that will be used by the
@@ -244,10 +237,8 @@ def select_family(list_of_families):
             longest_family = family
     return longest_family
 
-# selected_family = select_family(word_families)
-# print(selected_family)
-
 def welcome():
+    """Prints a welcome message??? to the user when the program is fist run"""
     print("West of House")
     print("You are standing in an open field west of a white house, with a boarded front door.")
     input("There is a small mailbox here.")
@@ -281,36 +272,8 @@ def print_words_of_length(words_list, length):
 if __name__ == "__main__":
     welcome()
     start_game()
-    #run_game_s(["TEETH", "CLEAR", "TOOTH", "BEECH", "BEACH", "TEACH", "PEACH", "PLACE", "MANGO"])
-    #get_guess(get_display_str("PASTE", ["P", "S"]), 3, ["P", "S"])
-    #print(no_blanks("P E A R T"))
-    #start_game()
-    # test_words = ["teeth", "clear", "tooth", "beech", "beach", "teach", "peach", "place", "mango"]
-    # print(test_words)
-    # new_family = handle_family_selection(test_words, "a")
-    # print(new_family)
-    # newer_family = handle_family_selection(new_family, "p")
-    # print(newer_family)
 
 
-
-
-
-
-
-
-
-### Obsolete function...added list-check to make a single function that performs this operation
-# def get_display_str_s(word_list):
-# """Returns a string representation of guessed letters and blanks for unguessed letters to show the player for the chosen word family"""
-# str = ""
-# word = word_list[0]
-# for letter in word:
-#     if letter in guessed_letters:
-#         str += letter + " "
-#     else:
-#         str += "_ "
-# return str
 
 # Working function to combine both easy and sinister into one run_game function....it's possible, but 
 # at this point there would be too many if blocks as I have it set up now, as I'm giving extra info in Sinister
