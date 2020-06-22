@@ -1,7 +1,8 @@
 import random
-import os
 
+import os
 clear = lambda: os.system("clear")
+
 file_name = "words.txt"
 words_file = open(file_name)
 complete_words_list = words_file.readlines()
@@ -245,6 +246,13 @@ def welcome():
     input("\n\nJust kidding.\nAlthough it may be better if you just go play Zork instead.")
     print("\n")
 
+## Main function to start game logic
+if __name__ == "__main__":
+    clear()
+    welcome()
+    start_game()
+
+
 
 #PRELIMINARY DICTIONARY EXPLORATION FUNCTIONS
 def find_longest(words_list):
@@ -267,12 +275,6 @@ def print_words_of_length(words_list, length):
         if len(word) == length:
             print(word)
 
-
-## Main function to start game logic
-if __name__ == "__main__":
-    clear()
-    welcome()
-    start_game()
 
 
 
