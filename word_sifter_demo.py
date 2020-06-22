@@ -1,9 +1,15 @@
-test_words = ["TEETH", "TOOTH", "BOOKS", "BOOTH", "MANGO", "PEACH", "BEACH", "TENTH", "PLACE", "CLEAR", "BONGO", "TOMES", "OTHER"]
+import os
+clear = lambda: os.system("clear")
+
+test_words = ["TEETH", "TOOTH", "BOOKS", "BOOTH", "MANGO", "PEACH", "BEACH", "TENTH", "PLACE", "CLEAR", "BONGO", "TOMES", "OTHER",
+                "TRIED", "TEMPT", "OCHER", "MAGIC", "RIGHT", "OGRES", "CHANT", "STING", "GRUMP", "FOGEY", "WHITE", "MANSE", "GRUNT",
+                ]
 
 def handle_family_selection(list_of_words, letter_to_check):
     """Uses a collection of functions(below) to take in the current list of words and select a subset of that list based on
     criteria set in the select_family() function.  This is used to dodge the players guesses by (at this time) selecting the largest
     list of words that somehow contains the letter checked in some pattern"""
+    clear()
     print("\n\nOur starter list on this step of filtration is:\n")
     print(list_of_words)
     print("\nWe are filtering it by the letter: " + letter_to_check + "\n")
